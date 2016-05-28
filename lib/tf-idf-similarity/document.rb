@@ -58,7 +58,7 @@ module TfIdfSimilarity
       new_text = @text + other.text
       new_term_counts = @term_counts.merge(other.term_counts) { |k, v_self, v_other| v_self+v_other}
       new_urls = @urls + other.urls
-      Document.new(new_text, :term_counts => new_term_counts, :size => new_size, :urls => new_urls)
+      Document.new(new_text, :term_counts => new_term_counts, :urls => new_urls)
     end
 
     def merge(other)
