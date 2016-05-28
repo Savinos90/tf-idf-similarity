@@ -62,6 +62,9 @@ module TfIdfSimilarity
     end
 
     def merge(other)
+      if other == self
+        return
+      end
       @text = @text + other.text
       @term_counts = @term_counts.merge(other.term_counts) { |k, v_self, v_other| v_self+v_other}
       @urls = @urls + other.urls
