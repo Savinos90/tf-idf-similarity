@@ -35,7 +35,7 @@ module TfIdfSimilarity
     def merge_and_update_matrix(first_index, second_index)
             
       # update matrix του term and counts
-      @matrix[first_index,true] += @matrix[first_index,true]
+      @matrix[first_index,true] += @matrix[second_index,true]
       @matrix = @matrix.delete_at([second_index])
 
     end

@@ -35,7 +35,7 @@ module TfIdfSimilarity
 
       
       # update matrix στο model (float)
-      @matrix[first_index,true] += @matrix[first_index,true]
+      @matrix[first_index,true] += @matrix[second_index,true]
       @matrix = @matrix.delete_at([second_index])
       
     end
