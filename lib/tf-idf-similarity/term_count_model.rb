@@ -25,7 +25,7 @@ module TfIdfSimilarity
       end
 
       @matrix = initialize_matrix(array)
-
+      
       @average_document_size = documents.empty? ? 0 : sum / column_size.to_f
     end
 

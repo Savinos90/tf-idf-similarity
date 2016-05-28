@@ -22,6 +22,24 @@ module TfIdfSimilarity
       @matrix = initialize_matrix(array)
     end
 
+    # @param [Integer] index of first document to be merged
+    # @param [Integer] index of second document to be merger
+    # merge two documents and update the model
+    def merge_and_update(first_index, second_index)
+      
+      # merge two documents to the the document with smaller index στο term and count
+      @model.documents[first_index].merge(@model.documents[second_index])
+      
+      # update matrix του term and counts
+      @model.matrix[first_index,true] += @model.matrix[first_index,true]
+      @model.matrix = @model.matrix.delete_at([second_index])
+
+      # update matrix στο model (float)
+      @matrix[first_index,true] += @model[first_index,true]
+      @matrix = @matrix.delete_at([second_index])
+      
+    end
+
     # Return the term frequency–inverse document frequency.
     #
     # @param [Document] document a document
