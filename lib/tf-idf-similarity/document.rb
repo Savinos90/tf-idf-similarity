@@ -55,13 +55,20 @@ module TfIdfSimilarity
     end
 
     def +(other)
-      new_text = self.text + other.text
-      new_term_counts = self.term_counts.merge(other.term_counts) { |k, v_self, v_other| v_self+v_other}
-      new_size = self.size + other.size
-      new_urls = self.urls + other.urls
-      Document.new(self.text, :term_counts => new_term_counts, :size => new_size, :urls => new_urls)
-      #Point.new(@x + other.x, @y + other.y)
+      new_text = @text + other.text
+      new_term_counts = @term_counts.merge(other.term_counts) { |k, v_self, v_other| v_self+v_other}
+      new_size = @size + other.size
+      new_urls = @urls + other.urls
+      Document.new(new_text, :term_counts => new_term_counts, :size => new_size, :urls => new_urls)
     end
+
+    def merge(other)
+      @text = @text + other.text
+      @term_counts = @term_counts.merge(other.term_counts) { |k, v_self, v_other| v_self+v_other}
+      @size = @size + other.size
+      @urls = @urls + other.urls
+    end
+
 
   private
 

@@ -171,13 +171,21 @@ module TfIdfSimilarity
     end
 
     describe '#+operator' do
-      it 'θα πρέπει να προσθέσει τα άρθρα' do
+      it 'προσθέτει τα άρθρα' do
         cluster = document_with_term_counts_url_and_size + second_document_with_term_counts_url_and_size
         cluster.term_counts.should == {'bar' => 7, 'baz' => 11, 'ok' => 2}
         cluster.size.should == 35
         cluster.urls.length.should == 2
       end
-      
+    end
+    
+    describe '#merge' do
+      it 'συγχωνεύει το δεύτερο άρθρο στο πρώτο' do
+        document_with_term_counts_url_and_size.merge(second_document_with_term_counts_url_and_size)
+        document_with_term_counts_url_and_size.term_counts.should == {'bar' => 7, 'baz' => 11, 'ok' => 2}
+        document_with_term_counts_url_and_size.size.should == 35
+        document_with_term_counts_url_and_size.urls.length.should == 2
+      end
     end
 
     
