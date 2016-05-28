@@ -9,6 +9,8 @@ module TfIdfSimilarity
     attr_reader :term_counts
     # The number of tokens in the document.
     attr_reader :size
+    # Η διεύθυνση url του άρθρου ή άρθρων σε περίπτωση που αναφέρεται σε cluster από άρθρα χωρισμένα με κόμμα
+    attr_reader :urls
 
     # @param [String] text the document's text
     # @param [Hash] opts optional arguments
@@ -16,11 +18,16 @@ module TfIdfSimilarity
     # @option opts [Array] :tokens the document's tokenized text
     # @option opts [Hash] :term_counts the number of times each term appears
     # @option opts [Integer] :size the number of tokens in the document
+    # @option opts [Array] :urls an array with urls (refference to web article or articles if it's cluster)
     def initialize(text, opts = {})
       @text   = text
       @id     = opts[:id] || object_id
       @tokens = opts[:tokens]
 
+      if opts[:urls]
+        @urls = opts[:urls]
+      end
+      
       if opts[:term_counts]
         @term_counts = opts[:term_counts]
         @size = opts[:size] || term_counts.values.reduce(0, :+)
@@ -45,6 +52,15 @@ module TfIdfSimilarity
     # @return [Integer] the number of times the term appears in the document
     def term_count(term)
       term_counts[term].to_i # need #to_i if unmarshalled
+    end
+
+    def +(other)
+      new_text = self.text + other.text
+      new_term_counts = self.term_counts.merge(other.term_counts) { |k, v_self, v_other| v_self+v_other}
+      new_size = self.size + other.size
+      new_urls = self.urls + other.urls
+      Document.new(self.text, :term_counts => new_term_counts, :size => new_size, :urls => new_urls)
+      #Point.new(@x + other.x, @y + other.y)
     end
 
   private

@@ -6,6 +6,11 @@ module TfIdfSimilarity
     let :text do
       "FOO-foo BAR bar \r\n\t 123 !@#"
     end
+    
+    let :second_text do
+      "FOO-foo BAR ok ok \r\n\t 123 !@#"
+    end
+
 
     let :tokens do
       ['FOO-foo', 'BAR', 'bar', "\r\n\t", '123', '!@#']
@@ -34,6 +39,25 @@ module TfIdfSimilarity
     let :document_with_term_counts_and_size do
       Document.new(text, :term_counts => {'bar' => 5, 'baz' => 10}, :size => 20)
     end
+
+    let :document_with_term_counts_url_and_size do
+      Document.new(text, :term_counts => {'bar' => 5, 'baz' => 10}, :size => 20, :urls => ["http://www.theguardian.com/lifeandstyle/2016/may/28/something-borrowed-rise-identikit-wedding"])
+    end
+    
+    let :second_document_with_term_counts_url_and_size do
+      Document.new(second_text, :term_counts => {'bar' => 2, 'baz' => 1, 'ok' => 2}, :size => 15, :urls => ["http://www.theguardian.com/environment/2016/may/28/sea-sponge-the-size-of-a-minivan-discovered-in-ocean-depths-off-hawaii"])
+    end
+
+
+    
+    let :document_with_one_url do
+      Document.new(text, :urls => ["http://www.theguardian.com/lifeandstyle/2016/may/28/something-borrowed-rise-identikit-wedding"])
+    end
+
+    let :document_with_many_url do
+      Document.new(text, :urls => ["http://www.theguardian.com/lifeandstyle/2016/may/28/something-borrowed-rise-identikit-wedding","http://www.theguardian.com/environment/2016/may/28/sea-sponge-the-size-of-a-minivan-discovered-in-ocean-depths-off-hawaii"])
+    end
+
 
     let :document_with_size do
       Document.new(text, :size => 10)
@@ -134,5 +158,28 @@ module TfIdfSimilarity
         document_with_term_counts.term_count('bar').should == 5
       end
     end
+
+    describe '#urls_csv' do
+      it 'should return 1 url if it refers to one article' do
+        document_with_one_url.urls.length.should == 1
+      end
+
+      it 'should return two url if it refers to 2 article' do
+        document_with_many_url.urls.length.should == 2
+      end
+
+    end
+
+    describe '#+operator' do
+      it 'θα πρέπει να προσθέσει τα άρθρα' do
+        cluster = document_with_term_counts_url_and_size + second_document_with_term_counts_url_and_size
+        cluster.term_counts.should == {'bar' => 7, 'baz' => 11, 'ok' => 2}
+        cluster.size.should == 35
+        cluster.urls.length.should == 2
+      end
+      
+    end
+
+    
   end
 end
