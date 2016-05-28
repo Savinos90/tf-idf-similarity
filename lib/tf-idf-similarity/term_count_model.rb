@@ -29,6 +29,17 @@ module TfIdfSimilarity
       @average_document_size = documents.empty? ? 0 : sum / column_size.to_f
     end
 
+    # @param [Integer] index of first document to be merged
+    # @param [Integer] index of second document to be merger
+    # merge two documents and update the model
+    def merge_and_update_matrix(first_index, second_index)
+            
+      # update matrix του term and counts
+      @matrix[first_index,true] += @matrix[first_index,true]
+      @matrix = @matrix.delete_at([second_index])
+
+    end
+
     # @param [String] term a term
     # @return [Integer] the number of documents the term appears in
     def document_count(term)

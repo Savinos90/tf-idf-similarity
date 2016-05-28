@@ -31,11 +31,11 @@ module TfIdfSimilarity
       @model.documents[first_index].merge(@model.documents[second_index])
       
       # update matrix του term and counts
-      @model.matrix[first_index,true] += @model.matrix[first_index,true]
-      @model.matrix = @model.matrix.delete_at([second_index])
+      @model.merge_and_update_matrix(first_index, second_index)
 
+      
       # update matrix στο model (float)
-      @matrix[first_index,true] += @model[first_index,true]
+      @matrix[first_index,true] += @matrix[first_index,true]
       @matrix = @matrix.delete_at([second_index])
       
     end
