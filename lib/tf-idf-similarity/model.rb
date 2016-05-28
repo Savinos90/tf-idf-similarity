@@ -29,6 +29,7 @@ module TfIdfSimilarity
       
       # merge two documents to the the document with smaller index στο term and count
       @model.documents[first_index].merge(@model.documents[second_index])
+      @model.documents.delete_at(second_index)
       
       # update matrix του term and counts
       @model.merge_and_update_matrix(first_index, second_index)
