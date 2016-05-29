@@ -11,7 +11,10 @@ module TfIdfSimilarity
     attr_reader :size
     # Η διεύθυνση url του άρθρου ή άρθρων σε περίπτωση που αναφέρεται σε cluster από άρθρα χωρισμένα με κόμμα
     attr_reader :urls
+    # Η θέση του άρθρου που αντιστοιχεί στον αρχικό πίνακα - για να διατηρείται η αναφορά σε περίπτωση merge
+    attr_reader :ids
 
+    
     # @param [String] text the document's text
     # @param [Hash] opts optional arguments
     # @option opts [String] :id the document's identifier
@@ -23,10 +26,8 @@ module TfIdfSimilarity
       @text   = text
       @id     = opts[:id] || object_id
       @tokens = opts[:tokens]
-
-      if opts[:urls]
-        @urls = opts[:urls]
-      end
+      @urls = opts[:urls] || []
+      @ids = opts[:ids] || []
       
       if opts[:term_counts]
         @term_counts = opts[:term_counts]
@@ -54,13 +55,6 @@ module TfIdfSimilarity
       term_counts[term].to_i # need #to_i if unmarshalled
     end
 
-    def +(other)
-      new_text = @text + other.text
-      new_term_counts = @term_counts.merge(other.term_counts) { |k, v_self, v_other| v_self+v_other}
-      new_urls = @urls + other.urls
-      Document.new(new_text, :term_counts => new_term_counts, :urls => new_urls)
-    end
-
     def merge(other)
       if other == self
         return
@@ -68,6 +62,7 @@ module TfIdfSimilarity
       @text = @text + other.text
       @term_counts = @term_counts.merge(other.term_counts) { |k, v_self, v_other| v_self+v_other}
       @urls = @urls + other.urls
+      @ids = @ids + other.ids
     end
 
 

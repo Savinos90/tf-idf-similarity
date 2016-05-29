@@ -11,7 +11,7 @@ module TfIdfSimilarity
     def initialize(documents, opts = {})
       @model = TermCountModel.new(documents, opts)
       @library = (opts[:library] || :matrix).to_sym
-
+      
       array = Array.new(terms.size) do |i|
         idf = inverse_document_frequency(terms[i])
         Array.new(documents.size) do |j|
@@ -26,7 +26,10 @@ module TfIdfSimilarity
     # @param [Integer] index of second document to be merger
     # merge two documents and update the model
     def merge_and_update(first_index, second_index)
-      
+
+      if first_index == second_index
+        return null
+      end
       # merge two documents to the the document with smaller index στο term and count
       @model.documents[first_index].merge(@model.documents[second_index])
       @model.documents.delete_at(second_index)
@@ -39,6 +42,7 @@ module TfIdfSimilarity
       @matrix[first_index,true] += @matrix[second_index,true]
       @matrix = @matrix.delete_at([second_index])
       
+      return self
     end
 
     # Return the term frequency–inverse document frequency.

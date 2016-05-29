@@ -40,12 +40,12 @@ module TfIdfSimilarity
       Document.new(text, :term_counts => {'bar' => 5, 'baz' => 10}, :size => 20)
     end
 
-    let :document_with_term_counts_url_and_size do
-      Document.new(text, :term_counts => {'bar' => 5, 'baz' => 10}, :size => 20, :urls => ["http://www.theguardian.com/lifeandstyle/2016/may/28/something-borrowed-rise-identikit-wedding"])
+    let :document_with_term_counts_url_and_ids do
+      Document.new(text, :term_counts => {'bar' => 5, 'baz' => 10}, :ids => [1], :urls => ["http://www.theguardian.com/lifeandstyle/2016/may/28/something-borrowed-rise-identikit-wedding"])
     end
     
     let :second_document_with_term_counts_url_and_size do
-      Document.new(second_text, :term_counts => {'bar' => 2, 'baz' => 1, 'ok' => 2}, :size => 15, :urls => ["http://www.theguardian.com/environment/2016/may/28/sea-sponge-the-size-of-a-minivan-discovered-in-ocean-depths-off-hawaii"])
+      Document.new(second_text, :term_counts => {'bar' => 2, 'baz' => 1, 'ok' => 2}, :ids => [3], :urls => ["http://www.theguardian.com/environment/2016/may/28/sea-sponge-the-size-of-a-minivan-discovered-in-ocean-depths-off-hawaii"])
     end
 
 
@@ -169,22 +169,13 @@ module TfIdfSimilarity
       end
 
     end
-
-    describe '#+operator' do
-      it 'προσθέτει τα άρθρα' do
-        cluster = document_with_term_counts_url_and_size + second_document_with_term_counts_url_and_size
-        cluster.term_counts.should == {'bar' => 7, 'baz' => 11, 'ok' => 2}
-        cluster.size.should == 35
-        cluster.urls.length.should == 2
-      end
-    end
     
     describe '#merge' do
       it 'συγχωνεύει το δεύτερο άρθρο στο πρώτο' do
-        document_with_term_counts_url_and_size.merge(second_document_with_term_counts_url_and_size)
-        document_with_term_counts_url_and_size.term_counts.should == {'bar' => 7, 'baz' => 11, 'ok' => 2}
-        document_with_term_counts_url_and_size.size.should == 35
-        document_with_term_counts_url_and_size.urls.length.should == 2
+        document_with_term_counts_url_and_ids.merge(second_document_with_term_counts_url_and_size)
+        document_with_term_counts_url_and_ids.term_counts.should == {'bar' => 7, 'baz' => 11, 'ok' => 2}
+        document_with_term_counts_url_and_ids.urls.length.should == 2
+        document_with_term_counts_url_and_ids.ids == [1,2]         
       end
     end
 
