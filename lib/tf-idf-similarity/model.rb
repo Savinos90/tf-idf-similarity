@@ -24,7 +24,7 @@ module TfIdfSimilarity
 
     def keywords(document_id)
       keywords_array = []
-      @matrix[document_id,true].sort_index.each { |t|
+      @matrix[document_id,true].sort_index.to_a.last(6).each { |t|
         keywords_array << @model.terms[t]
       }
       return keywords_array
