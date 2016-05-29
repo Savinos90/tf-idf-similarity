@@ -22,6 +22,14 @@ module TfIdfSimilarity
       @matrix = initialize_matrix(array)
     end
 
+    def keywords(document_id)
+      keywords_array = []
+      @matrix[document_id,true].sort_index.each { |t|
+        keywords_array << @model.terms[t]
+      }
+      return keywords_array
+    end
+
     # @param [Integer] index of first document to be merged
     # @param [Integer] index of second document to be merger
     # merge two documents and update the model
